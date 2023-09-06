@@ -516,33 +516,21 @@ extension SwiftyMarkdown {
 			paragraphStyle.headIndent = 20.0
 			attributes[.paragraphStyle] = paragraphStyle
 		case .unorderedList, .unorderedListIndentFirstOrder, .unorderedListIndentSecondOrder, .orderedList, .orderedListIndentFirstOrder, .orderedListIndentSecondOrder:
-			let interval = CGFloat(25)
-			var addition = interval
 			var indent = ""
 			switch line.lineStyle as! MarkdownLineStyle {
+            case .unorderedList:
+                listItem = "•"
 			case .unorderedListIndentFirstOrder, .orderedListIndentFirstOrder:
-				addition = interval * 2
-				indent = "\t"
+                listItem = "◦"
+				indent = "   "
 			case .unorderedListIndentSecondOrder, .orderedListIndentSecondOrder:
-				addition = interval * 3
-				indent = "\t\t"
+                listItem = "•"
+				indent = "      "
 			default:
 				break
 			}
-			
 			lineProperties = body
-			
-			let paragraphStyle = NSMutableParagraphStyle()
-			paragraphStyle.tabStops = [
-                NSTextTab(textAlignment: .left, location: CGFloat(10), options: [:]),
-                NSTextTab(textAlignment: .left, location: CGFloat(10), options: [:])
-            ]
-            paragraphStyle.defaultTabInterval = CGFloat(10)
-			paragraphStyle.headIndent = addition
-
-			attributes[.paragraphStyle] = paragraphStyle
-			finalTokens.insert(Token(type: .string, inputString: "\(indent)\(listItem)\t"), at: 0)
-			
+			finalTokens.insert(Token(type: .string, inputString: "\(indent)\(listItem)  "), at: 0)
 		case .yaml:
 			lineProperties = body
 		case .previousH1:
