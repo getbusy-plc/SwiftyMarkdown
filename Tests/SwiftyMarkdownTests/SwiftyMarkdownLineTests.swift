@@ -22,20 +22,7 @@ struct TokenTest {
 }
 
 class SwiftyMarkdownTests: XCTestCase {
-    
-	
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
 	func testThatOctothorpeHeadersAreHandledCorrectly() {
-		
 		let heading1 = StringTest(input: "# Heading 1", expectedOutput: "Heading 1")
 		var smd = SwiftyMarkdown(string:heading1.input )
 		XCTAssertEqual(smd.attributedString().string, heading1.expectedOutput)
@@ -87,10 +74,8 @@ class SwiftyMarkdownTests: XCTestCase {
 		let headerStringWithItalic = StringTest(input: "## Header 2 _With Italics_", expectedOutput: "Header 2 With Italics")
 		smd = SwiftyMarkdown(string: headerStringWithItalic.input)
 		XCTAssertEqual(smd.attributedString().string, headerStringWithItalic.expectedOutput)
-		
 	}
 
-	
 	func testThatUndelinedHeadersAreHandledCorrectly() {
 
 		let h1String = StringTest(input: "Header 1\n===\nSome following text", expectedOutput: "Header 1\nSome following text")
@@ -167,11 +152,7 @@ A break
 """)
 		md = SwiftyMarkdown(string: moreComplicatedList.input)
 		XCTAssertEqual(md.attributedString().string, moreComplicatedList.expectedOutput)
-		
 	}
-	
-	
-	
 	
     /*
         The reason for this test is because the list of items dropped every other item in bullet lists marked with "-"
@@ -180,7 +161,6 @@ A break
         It incorrectly identified rows as `Alt-H2` 
      */
     func offtestInternationalCharactersInList() {
-        
         let expected = "A cool title\n\n- Point number one\n- Här har vi svenska ÅÄÖåäö tecken\n- Point number two\n \nA Link"
         let input = "# A cool title\n\n- Point number one\n- Här har vi svenska ÅÄÖåäö tecken\n- Point number two\n\n[A Link](http://dooer.com)"
         let output = SwiftyMarkdown(string: input).attributedString().string
@@ -188,14 +168,11 @@ A break
         XCTAssertEqual(output, expected)
         
     }
-	
 
-	
 	func testThatYAMLMetadataIsRemoved() {
 		let yaml = StringTest(input: "---\nlayout: page\ntitle: \"Trail Wallet FAQ\"\ndate: 2015-04-22 10:59\ncomments: true\nsharing: true\nliking: false\nfooter: true\nsidebar: false\n---\n# Finally some Markdown!\n\nWith A Heading\n---", expectedOutput: "Finally some Markdown!\n\nWith A Heading")
 		let md = SwiftyMarkdown(string: yaml.input)
 		XCTAssertEqual(md.attributedString().string, yaml.expectedOutput)
 		XCTAssertEqual(md.frontMatterAttributes.count, 8)
 	}
-	
 }
