@@ -516,8 +516,7 @@ extension SwiftyMarkdown {
 			paragraphStyle.headIndent = 20.0
 			attributes[.paragraphStyle] = paragraphStyle
 		case .unorderedList, .unorderedListIndentFirstOrder, .unorderedListIndentSecondOrder, .orderedList, .orderedListIndentFirstOrder, .orderedListIndentSecondOrder:
-			
-			let interval : CGFloat = 30
+			let interval = CGFloat(10)
 			var addition = interval
 			var indent = ""
 			switch line.lineStyle as! MarkdownLineStyle {
