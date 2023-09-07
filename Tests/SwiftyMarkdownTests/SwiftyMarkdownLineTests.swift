@@ -97,14 +97,13 @@ class SwiftyMarkdownTests: XCTestCase {
             expectedOutput: "An Unordered List:\n"
                 + "-  Item 1\n"
                 + "   *  Indented\n"
-                + "      +  Indented again\n"
+                + "      -  Indented again\n"
                 + "-  Item 2"
         )
 
         let markdown = SwiftyMarkdown(string: test.input)
         markdown.bullet = "-"
-        markdown.bulletIndentFirstOrder = "*"
-        markdown.bulletIndentSecondOrder = "+"
+        markdown.bulletAlt = "*"
 
         XCTAssertEqual(
             markdown.attributedString().string,
@@ -122,14 +121,13 @@ class SwiftyMarkdownTests: XCTestCase {
             expectedOutput: "An Unordered List:\n"
             + "-  Item 1\n"
             + "   *  Indented\n"
-            + "      +  Indented again\n"
+            + "      -  Indented again\n"
             + "-  Item 2"
         )
 
         let markdown = SwiftyMarkdown(string: test.input)
         markdown.bullet = "-"
-        markdown.bulletIndentFirstOrder = "*"
-        markdown.bulletIndentSecondOrder = "+"
+        markdown.bulletAlt = "*"
 
         XCTAssertEqual(
             markdown.attributedString().string,
@@ -147,14 +145,13 @@ class SwiftyMarkdownTests: XCTestCase {
             expectedOutput: "An Unordered List:\n"
             + "-  Item 1\n"
             + "   *  Indented\n"
-            + "      +  Indented again\n"
+            + "      -  Indented again\n"
             + "-  Item 2"
         )
 
         let markdown = SwiftyMarkdown(string: test.input)
         markdown.bullet = "-"
-        markdown.bulletIndentFirstOrder = "*"
-        markdown.bulletIndentSecondOrder = "+"
+        markdown.bulletAlt = "*"
 
         XCTAssertEqual(
             markdown.attributedString().string,
@@ -172,14 +169,13 @@ class SwiftyMarkdownTests: XCTestCase {
             expectedOutput: "An Unordered List:\n"
             + "-  Item 1\n"
             + "   *  Indented\n"
-            + "      +  Indented again\n"
+            + "      -  Indented again\n"
             + "-  Item 2"
         )
 
         let markdown = SwiftyMarkdown(string: test.input)
         markdown.bullet = "-"
-        markdown.bulletIndentFirstOrder = "*"
-        markdown.bulletIndentSecondOrder = "+"
+        markdown.bulletAlt = "*"
 
         XCTAssertEqual(
             markdown.attributedString().string,
@@ -197,14 +193,13 @@ class SwiftyMarkdownTests: XCTestCase {
             expectedOutput: "An Unordered List:\n"
             + "-  Item 1\n"
             + "   *  Indented\n"
-            + "      +  Indented again\n"
+            + "      -  Indented again\n"
             + "-  Item 2"
         )
 
         let markdown = SwiftyMarkdown(string: test.input)
         markdown.bullet = "-"
-        markdown.bulletIndentFirstOrder = "*"
-        markdown.bulletIndentSecondOrder = "+"
+        markdown.bulletAlt = "*"
 
         XCTAssertEqual(
             markdown.attributedString().string,
@@ -222,14 +217,53 @@ class SwiftyMarkdownTests: XCTestCase {
             expectedOutput: "An Unordered List:\n"
             + "-  Item 1\n"
             + "   *  Indented\n"
-            + "      +  Indented again\n"
+            + "      -  Indented again\n"
             + "-  Item 2"
         )
 
         let markdown = SwiftyMarkdown(string: test.input)
         markdown.bullet = "-"
-        markdown.bulletIndentFirstOrder = "*"
-        markdown.bulletIndentSecondOrder = "+"
+        markdown.bulletAlt = "*"
+
+        XCTAssertEqual(
+            markdown.attributedString().string,
+            test.expectedOutput
+        )
+    }
+
+    func test_unorderedList_maxIndent() {
+        let test = StringTest(
+            input: "An Unordered List:\n"
+            + "- Item 1\n"
+            + "\t- 1\n"
+            + "\t\t- 2\n"
+            + "\t\t\t- 3\n"
+            + "\t\t\t\t- 4\n"
+            + "\t\t\t\t\t- 5\n"
+            + "\t\t\t\t\t\t- 6\n"
+            + "\t\t\t\t\t\t\t- 7\n"
+            + "\t\t\t\t\t\t\t\t- 8\n"
+            + "\t\t\t\t\t\t\t\t\t- 9\n"
+            + "\t\t\t\t\t\t\t\t\t\t- 10\n"
+            + "- Item 2",
+            expectedOutput: "An Unordered List:\n"
+            + "-  Item 1\n"
+            + "   *  1\n"
+            + "      -  2\n"
+            + "         *  3\n"
+            + "            -  4\n"
+            + "               *  5\n"
+            + "                  -  6\n"
+            + "                     *  7\n"
+            + "                        -  8\n"
+            + "                           *  9\n"
+            + "                              -  10\n"
+            + "-  Item 2"
+        )
+
+        let markdown = SwiftyMarkdown(string: test.input)
+        markdown.bullet = "-"
+        markdown.bulletAlt = "*"
 
         XCTAssertEqual(
             markdown.attributedString().string,
@@ -302,6 +336,84 @@ class SwiftyMarkdownTests: XCTestCase {
             + "      2.  Second Intent 2\n"
             + "   3.  First Indent 3\n"
             + "      1.  Second Intent 3\n"
+            + "3.  Item 3"
+        )
+
+        let markdown = SwiftyMarkdown(string: test.input)
+
+        XCTAssertEqual(
+            markdown.attributedString().string,
+            test.expectedOutput
+        )
+    }
+
+    func test_orderedList_maxIndent() {
+        let test = StringTest(
+            input: "An Ordered List:\n"
+            + "1. Item 1\n"
+            + "\t1. 1\n"
+            + "\t\t1. 2\n"
+            + "\t\t\t1. 3\n"
+            + "\t\t\t\t1. 4\n"
+            + "\t\t\t\t\t1. 5\n"
+            + "\t\t\t\t\t\t1. 6\n"
+            + "\t\t\t\t\t\t\t1. 7\n"
+            + "\t\t\t\t\t\t\t\t1. 8\n"
+            + "\t\t\t\t\t\t\t\t\t1. 9\n"
+            + "\t\t\t\t\t\t\t\t\t\t1. 10\n"
+            + "1. Item 2",
+            expectedOutput: "An Ordered List:\n"
+            + "1.  Item 1\n"
+            + "   1.  1\n"
+            + "      1.  2\n"
+            + "         1.  3\n"
+            + "            1.  4\n"
+            + "               1.  5\n"
+            + "                  1.  6\n"
+            + "                     1.  7\n"
+            + "                        1.  8\n"
+            + "                           1.  9\n"
+            + "                              1.  10\n"
+            + "2.  Item 2"
+        )
+
+        let markdown = SwiftyMarkdown(string: test.input)
+
+        XCTAssertEqual(
+            markdown.attributedString().string,
+            test.expectedOutput
+        )
+    }
+
+    func test_orderedList_resetCounts() {
+        let test = StringTest(
+            input: "An Ordered List:\n"
+            + "1. Item 1\n"
+            + "\t1. A\n"
+            + "\t\t1. X\n"
+            + "\t\t\t1. 1\n"
+            + "\t\t\t1. 2\n"
+            + "\t\t\t1. 3\n"
+            + "\t\t1. Y\n"
+            + "\t1. B\n"
+            + "\t\t1. X\n"
+            + "1. Item 2\n"
+            + "\t1. A\n"
+            + "\t1. B\n"
+            + "1. Item 3",
+            expectedOutput: "An Ordered List:\n"
+            + "1.  Item 1\n"
+            + "   1.  A\n"
+            + "      1.  X\n"
+            + "         1.  1\n"
+            + "         2.  2\n"
+            + "         3.  3\n"
+            + "      2.  Y\n"
+            + "   2.  B\n"
+            + "      1.  X\n"
+            + "2.  Item 2\n"
+            + "   1.  A\n"
+            + "   2.  B\n"
             + "3.  Item 3"
         )
 
