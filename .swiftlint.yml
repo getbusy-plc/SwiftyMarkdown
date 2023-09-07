@@ -15,7 +15,6 @@ opt_in_rules:
   - identical_operands
   - legacy_multiple
   - nimble_operator
-  - prefer_nimble
   - redundant_self_in_closure
   - self_binding
   - test_case_accessibility

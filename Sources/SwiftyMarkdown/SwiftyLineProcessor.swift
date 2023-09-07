@@ -184,11 +184,9 @@ public class SwiftyLineProcessor {
             return strings
         }
         var rulesToApply: FrontMatterRule?
-        for matter in frontMatterRules {
-            if firstString == matter.openTag {
-                rulesToApply = matter
-                break
-            }
+        for matter in frontMatterRules where firstString == matter.openTag {
+            rulesToApply = matter
+            break
         }
         guard let existentRules = rulesToApply else {
             return strings

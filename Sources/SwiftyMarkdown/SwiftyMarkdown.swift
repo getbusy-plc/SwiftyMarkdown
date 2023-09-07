@@ -164,7 +164,9 @@ enum MarkdownLineStyle: LineStyling {
         LineRule(token: "# ", type: MarkdownLineStyle.h1, removeFrom: .both),
     ]
 
-    public static var characterRules = [
+    public static var characterRules = defaultCharacterRules
+
+    public static let defaultCharacterRules = [
         CharacterRule(primaryTag: CharacterRuleTag(tag: "![", type: .open), otherTags: [
             CharacterRuleTag(tag: "]", type: .close),
             CharacterRuleTag(tag: "[", type: .metadataOpen),

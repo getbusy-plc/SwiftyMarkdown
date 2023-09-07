@@ -51,17 +51,12 @@ enum Rule {
     }
 }
 
-class SwiftyMarkdownCharacterTests: XCTestCase {
-    private let defaultRules = SwiftyMarkdown.characterRules
-
-    private var challenge: TokenTest!
-    private var results: ChallengeReturn!
-
-    private func attempt(_ challenge: TokenTest, rules: [Rule]? = nil) -> ChallengeReturn {
+extension XCTestCase {
+    func markdownCharacterTest(_ challenge: TokenTest, rules: [Rule]? = nil) -> ChallengeReturn {
         if let validRules = rules {
             SwiftyMarkdown.characterRules = validRules.map { $0.asCharacterRule() }
         } else {
-            SwiftyMarkdown.characterRules = defaultRules
+            SwiftyMarkdown.characterRules = SwiftyMarkdown.defaultCharacterRules
         }
 
         let md = SwiftyMarkdown(string: challenge.input)
