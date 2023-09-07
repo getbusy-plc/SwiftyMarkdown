@@ -438,7 +438,17 @@ class SwiftyMarkdownTests: XCTestCase {
 
     func testThatYAMLMetadataIsRemoved() {
         let yaml = StringTest(
-            input: "---\nlayout: page\ntitle: \"Trail Wallet FAQ\"\ndate: 2015-04-22 10:59\ncomments: true\nsharing: true\nliking: false\nfooter: true\nsidebar: false\n---\n# Finally some Markdown!\n\nWith A Heading\n---",
+            input: "---\n"
+                + "layout: page\n"
+                + "title: \"Trail Wallet FAQ\"\ndate: 2015-04-22 10:59\n"
+                + "comments: true\nsharing: true\n"
+                + "liking: false\n"
+                + "footer: true\n"
+                + "sidebar: false\n"
+                + "---\n"
+                + "# Finally some Markdown!\n\n"
+                + "With A Heading\n"
+                + "---",
             expectedOutput: "Finally some Markdown!\n\nWith A Heading"
         )
         let md = SwiftyMarkdown(string: yaml.input)

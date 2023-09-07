@@ -161,8 +161,8 @@ class SwiftyScanner {
                 return nil
             }
             let endIdx = (pointer + tag.count - 1)
-            for i in pointer ... endIdx {
-                self.elements[i].type = .tag
+            for index in pointer ... endIdx {
+                self.elements[index].type = .tag
             }
             range = pointer ... endIdx
             pointer += tag.count

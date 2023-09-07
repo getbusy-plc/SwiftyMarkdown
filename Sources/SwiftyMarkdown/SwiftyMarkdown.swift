@@ -104,7 +104,8 @@ enum MarkdownLineStyle: LineStyling {
 }
 
 /**
- A class defining the styles that can be applied to the parsed Markdown. The `fontName` property is optional, and if it's not set then the `fontName` property of the Body style will be applied.
+ A class defining the styles that can be applied to the parsed Markdown. The `fontName` property is optional, and if it's not set then the
+ `fontName` property of the Body style will be applied.
 
  If that is not set, then the system default will be used.
  */
@@ -164,7 +165,9 @@ enum MarkdownLineStyle: LineStyling {
         LineRule(token: "# ", type: MarkdownLineStyle.h1, removeFrom: .both),
     ]
 
-    public static var characterRules = [
+    public static var characterRules = defaultCharacterRules
+
+    public static let defaultCharacterRules = [
         CharacterRule(primaryTag: CharacterRuleTag(tag: "![", type: .open), otherTags: [
             CharacterRuleTag(tag: "]", type: .close),
             CharacterRuleTag(tag: "[", type: .metadataOpen),
@@ -396,7 +399,8 @@ enum MarkdownLineStyle: LineStyling {
     }
 
     /**
-     Generates an NSAttributedString from the string or URL passed at initialisation. Custom fonts or styles are applied to the appropriate elements when this method is called.
+     Generates an NSAttributedString from the string or URL passed at initialisation. Custom fonts or styles are applied to the appropriate"
+     elements when this method is called.
 
      - returns: An NSAttributedString with the styles applied
      */
@@ -473,7 +477,7 @@ extension SwiftyMarkdown {
             orderedListCounts = Array(repeating: 0, count: LineRule.listIndentationLevels + 1)
         }
         if case let .unorderedList(level) = markdownLineStyle {
-            if level % 2 == 0 {
+            if level.isMultiple(of: 2) {
                 listItem = bullet
             } else {
                 listItem = bulletAlt
