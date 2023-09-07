@@ -257,7 +257,9 @@ If that is not set, then the system default will be used.
 	
 	open var strikethrough = BasicStyles()
 	
-	public var bullet : String = "・"
+	public var bullet : String = "•"
+    public var bulletIndentFirstOrder : String = "•"
+    public var bulletIndentSecondOrder : String = "◦"
 	
 	public var underlineLinks : Bool = false
 	
@@ -464,7 +466,7 @@ extension SwiftyMarkdown {
 			preconditionFailure("The passed line style is not a valid Markdown Line Style")
 		}
 		
-		var listItem = self.bullet
+		var listItem = ""
 		switch markdownLineStyle {
 		case .orderedList:
 			self.orderedListCount += 1
@@ -489,6 +491,16 @@ extension SwiftyMarkdown {
 			self.orderedListIndentFirstOrderCount = 0
 			self.orderedListIndentSecondOrderCount = 0
 		}
+        switch markdownLineStyle {
+        case .unorderedList:
+            listItem = bullet
+        case .unorderedListIndentFirstOrder:
+            listItem = bulletIndentFirstOrder
+        case .unorderedListIndentSecondOrder:
+            listItem = bulletIndentSecondOrder
+        default:
+            break
+        }
 
 		let lineProperties : LineProperties
 		switch markdownLineStyle {
@@ -518,13 +530,9 @@ extension SwiftyMarkdown {
 		case .unorderedList, .unorderedListIndentFirstOrder, .unorderedListIndentSecondOrder, .orderedList, .orderedListIndentFirstOrder, .orderedListIndentSecondOrder:
 			var indent = ""
 			switch line.lineStyle as! MarkdownLineStyle {
-            case .unorderedList:
-                listItem = "•"
 			case .unorderedListIndentFirstOrder, .orderedListIndentFirstOrder:
-                listItem = "◦"
-				indent = "   "
+                indent = "   "
 			case .unorderedListIndentSecondOrder, .orderedListIndentSecondOrder:
-                listItem = "•"
 				indent = "      "
 			default:
 				break
