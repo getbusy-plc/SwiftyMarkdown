@@ -7,9 +7,9 @@
 //
 import os.log
 #if os(macOS)
-    import AppKit
+import AppKit
 #else
-    import UIKit
+import UIKit
 #endif
 
 extension OSLog {
@@ -82,19 +82,19 @@ enum MarkdownLineStyle: LineStyling {
 }
 
 #if os(macOS)
-    @objc public protocol FontProperties {
-        var fontName: String? { get set }
-        var color: NSColor { get set }
-        var fontSize: CGFloat { get set }
-        var fontStyle: FontStyle { get set }
-    }
+@objc public protocol FontProperties {
+    var fontName: String? { get set }
+    var color: NSColor { get set }
+    var fontSize: CGFloat { get set }
+    var fontStyle: FontStyle { get set }
+}
 #else
-    @objc public protocol FontProperties {
-        var fontName: String? { get set }
-        var color: UIColor { get set }
-        var fontSize: CGFloat { get set }
-        var fontStyle: FontStyle { get set }
-    }
+@objc public protocol FontProperties {
+    var fontName: String? { get set }
+    var color: UIColor { get set }
+    var fontSize: CGFloat { get set }
+    var fontStyle: FontStyle { get set }
+}
 #endif
 
 @objc public protocol LineProperties {
@@ -111,9 +111,9 @@ enum MarkdownLineStyle: LineStyling {
 @objc open class BasicStyles: NSObject, FontProperties {
     public var fontName: String?
     #if os(macOS)
-        public var color = NSColor.black
+    public var color = NSColor.black
     #else
-        public var color = UIColor.black
+    public var color = UIColor.black
     #endif
     public var fontSize: CGFloat = 0.0
     public var fontStyle: FontStyle = .normal
@@ -122,9 +122,9 @@ enum MarkdownLineStyle: LineStyling {
 @objc open class LineStyles: NSObject, FontProperties, LineProperties {
     public var fontName: String?
     #if os(macOS)
-        public var color = NSColor.black
+    public var color = NSColor.black
     #else
-        public var color = UIColor.black
+    public var color = UIColor.black
     #endif
     public var fontSize: CGFloat = 0.0
     public var fontStyle: FontStyle = .normal
@@ -136,13 +136,14 @@ enum MarkdownLineStyle: LineStyling {
 @objc open class LinkStyles: BasicStyles {
     public var underlineStyle: NSUnderlineStyle = .single
     #if os(macOS)
-        public lazy var underlineColor = self.color
+    public lazy var underlineColor = self.color
     #else
-        public lazy var underlineColor = self.color
+    public lazy var underlineColor = self.color
     #endif
 }
 
-/// A class that takes a [Markdown](https://daringfireball.net/projects/markdown/) string or file and returns an NSAttributedString with the applied styles. Supports Dynamic Type.
+/// A class that takes a [Markdown](https://daringfireball.net/projects/markdown/) string or file and returns an NSAttributedString with the applied
+/// styles. Supports Dynamic Type.
 @objc open class SwiftyMarkdown: NSObject {
     public static var frontMatterRules = [
         FrontMatterRule(openTag: "---", closeTag: "---", keyValueSeparator: ":"),
@@ -184,13 +185,41 @@ enum MarkdownLineStyle: LineStyling {
             CharacterRuleTag(tag: "(", type: .metadataOpen),
             CharacterRuleTag(tag: ")", type: .metadataClose),
         ], styles: [1: CharacterStyle.link], metadataLookup: false, definesBoundary: true),
-        CharacterRule(primaryTag: CharacterRuleTag(tag: "`", type: .repeating), otherTags: [], styles: [1: CharacterStyle.code], shouldCancelRemainingRules: true, balancedTags: true),
-        CharacterRule(primaryTag: CharacterRuleTag(tag: "~", type: .repeating), otherTags: [], styles: [2: CharacterStyle.strikethrough], minTags: 2, maxTags: 2),
-        CharacterRule(primaryTag: CharacterRuleTag(tag: "*", type: .repeating), otherTags: [], styles: [1: CharacterStyle.italic, 2: CharacterStyle.bold], minTags: 1, maxTags: 2),
-        CharacterRule(primaryTag: CharacterRuleTag(tag: "_", type: .repeating), otherTags: [], styles: [1: CharacterStyle.italic, 2: CharacterStyle.bold], minTags: 1, maxTags: 2),
+        CharacterRule(
+            primaryTag: CharacterRuleTag(tag: "`", type: .repeating),
+            otherTags: [],
+            styles: [1: CharacterStyle.code],
+            shouldCancelRemainingRules: true,
+            balancedTags: true
+        ),
+        CharacterRule(
+            primaryTag: CharacterRuleTag(tag: "~", type: .repeating),
+            otherTags: [],
+            styles: [2: CharacterStyle.strikethrough],
+            minTags: 2,
+            maxTags: 2
+        ),
+        CharacterRule(
+            primaryTag: CharacterRuleTag(tag: "*", type: .repeating),
+            otherTags: [],
+            styles: [1: CharacterStyle.italic, 2: CharacterStyle.bold],
+            minTags: 1,
+            maxTags: 2
+        ),
+        CharacterRule(
+            primaryTag: CharacterRuleTag(tag: "_", type: .repeating),
+            otherTags: [],
+            styles: [1: CharacterStyle.italic, 2: CharacterStyle.bold],
+            minTags: 1,
+            maxTags: 2
+        ),
     ]
 
-    let lineProcessor = SwiftyLineProcessor(rules: SwiftyMarkdown.lineRules, defaultRule: MarkdownLineStyle.body, frontMatterRules: SwiftyMarkdown.frontMatterRules)
+    let lineProcessor = SwiftyLineProcessor(
+        rules: SwiftyMarkdown.lineRules,
+        defaultRule: MarkdownLineStyle.body,
+        frontMatterRules: SwiftyMarkdown.frontMatterRules
+    )
     let tokeniser = SwiftyTokeniser(with: SwiftyMarkdown.characterRules)
 
     /// The styles to apply to any H1 headers found in the Markdown
@@ -285,11 +314,11 @@ enum MarkdownLineStyle: LineStyling {
 
     func setup() {
         #if os(macOS)
-            setFontColorForAllStyles(with: .labelColor)
+        setFontColorForAllStyles(with: .labelColor)
         #elseif !os(watchOS)
-            if #available(iOS 13.0, tvOS 13.0, *) {
-                self.setFontColorForAllStyles(with: .label)
-            }
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            self.setFontColorForAllStyles(with: .label)
+        }
         #endif
 
         orderedListCounts = Array(repeating: 0, count: LineRule.listIndentationLevels + 1)
@@ -317,37 +346,37 @@ enum MarkdownLineStyle: LineStyling {
     }
 
     #if os(macOS)
-        open func setFontColorForAllStyles(with color: NSColor) {
-            h1.color = color
-            h2.color = color
-            h3.color = color
-            h4.color = color
-            h5.color = color
-            h6.color = color
-            body.color = color
-            italic.color = color
-            bold.color = color
-            code.color = color
-            link.color = color
-            blockquotes.color = color
-            strikethrough.color = color
-        }
+    open func setFontColorForAllStyles(with color: NSColor) {
+        h1.color = color
+        h2.color = color
+        h3.color = color
+        h4.color = color
+        h5.color = color
+        h6.color = color
+        body.color = color
+        italic.color = color
+        bold.color = color
+        code.color = color
+        link.color = color
+        blockquotes.color = color
+        strikethrough.color = color
+    }
     #else
-        open func setFontColorForAllStyles(with color: UIColor) {
-            h1.color = color
-            h2.color = color
-            h3.color = color
-            h4.color = color
-            h5.color = color
-            h6.color = color
-            body.color = color
-            italic.color = color
-            bold.color = color
-            code.color = color
-            link.color = color
-            blockquotes.color = color
-            strikethrough.color = color
-        }
+    open func setFontColorForAllStyles(with color: UIColor) {
+        h1.color = color
+        h2.color = color
+        h3.color = color
+        h4.color = color
+        h5.color = color
+        h6.color = color
+        body.color = color
+        italic.color = color
+        bold.color = color
+        code.color = color
+        link.color = color
+        blockquotes.color = color
+        strikethrough.color = color
+    }
     #endif
 
     open func setFontNameForAllStyles(with name: String) {
@@ -476,7 +505,8 @@ extension SwiftyMarkdown {
             paragraphStyle.firstLineHeadIndent = 20.0
             paragraphStyle.headIndent = 20.0
             attributes[.paragraphStyle] = paragraphStyle
-        case let .orderedList(level), let .unorderedList(level):
+        case let .orderedList(level),
+             let .unorderedList(level):
             var indent = ""
             if level > 0 {
                 indent = String(repeating: "   ", count: level)
@@ -539,23 +569,23 @@ extension SwiftyMarkdown {
             }
 
             #if !os(watchOS)
-                if let imgIdx = styles.firstIndex(of: .image), imgIdx < token.metadataStrings.count {
-                    if !applyAttachments {
-                        continue
-                    }
-                    #if !os(macOS)
-                        let image1Attachment = NSTextAttachment()
-                        image1Attachment.image = UIImage(named: token.metadataStrings[imgIdx])
-                        let str = NSAttributedString(attachment: image1Attachment)
-                        finalAttributedString.append(str)
-                    #elseif !os(watchOS)
-                        let image1Attachment = NSTextAttachment()
-                        image1Attachment.image = NSImage(named: token.metadataStrings[imgIdx])
-                        let str = NSAttributedString(attachment: image1Attachment)
-                        finalAttributedString.append(str)
-                    #endif
+            if let imgIdx = styles.firstIndex(of: .image), imgIdx < token.metadataStrings.count {
+                if !applyAttachments {
                     continue
                 }
+                #if !os(macOS)
+                let image1Attachment = NSTextAttachment()
+                image1Attachment.image = UIImage(named: token.metadataStrings[imgIdx])
+                let str = NSAttributedString(attachment: image1Attachment)
+                finalAttributedString.append(str)
+                #elseif !os(watchOS)
+                let image1Attachment = NSTextAttachment()
+                image1Attachment.image = NSImage(named: token.metadataStrings[imgIdx])
+                let str = NSAttributedString(attachment: image1Attachment)
+                finalAttributedString.append(str)
+                #endif
+                continue
+            }
             #endif
 
             if styles.contains(.code) {

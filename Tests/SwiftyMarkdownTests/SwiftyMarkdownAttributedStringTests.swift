@@ -27,6 +27,9 @@ class SwiftyMarkdownAttributedStringTests: XCTestCase {
 
         XCTAssertNotNil(attributedString)
 
-        XCTAssertEqual(attributedString.string, "Heading 1\n\nA more complicated example. This one has it all. Here is a link.\n\nHeading 2\n\nHeading 3\n\nThis one is a blockquote")
+        XCTAssertEqual(
+            attributedString.string,
+            "Heading 1\n\nA more complicated example. This one has it all. Here is a link.\n\nHeading 2\n\nHeading 3\n\nThis one is a blockquote"
+        )
     }
 }

@@ -60,7 +60,13 @@ public struct LineRule {
     let shouldTrim: Bool
     let changeAppliesTo: ChangeApplication
 
-    public init(token: String, type: LineStyling, removeFrom: Remove = .leading, shouldTrim: Bool = true, changeAppliesTo: ChangeApplication = .current) {
+    public init(
+        token: String,
+        type: LineStyling,
+        removeFrom: Remove = .leading,
+        shouldTrim: Bool = true,
+        changeAppliesTo: ChangeApplication = .current
+    ) {
         self.token = token
         self.type = type
         self.removeFrom = removeFrom
@@ -79,7 +85,11 @@ public class SwiftyLineProcessor {
     let lineRules: [LineRule]
     let frontMatterRules: [FrontMatterRule]
 
-    let perfomanceLog = PerformanceLog(with: "SwiftyLineProcessorPerformanceLogging", identifier: "Line Processor", log: OSLog.swiftyLineProcessorPerformance)
+    let perfomanceLog = PerformanceLog(
+        with: "SwiftyLineProcessorPerformanceLogging",
+        identifier: "Line Processor",
+        log: OSLog.swiftyLineProcessorPerformance
+    )
 
     public init(rules: [LineRule], defaultRule: LineStyling, frontMatterRules: [FrontMatterRule] = []) {
         lineRules = rules
@@ -89,7 +99,9 @@ public class SwiftyLineProcessor {
 
     func findLeadingLineElement(_ element: LineRule, in string: String) -> String {
         var output = string
-        if let range = output.index(output.startIndex, offsetBy: element.token.count, limitedBy: output.endIndex), output[output.startIndex ..< range] == element.token {
+        if let range = output.index(output.startIndex, offsetBy: element.token.count, limitedBy: output.endIndex),
+           output[output.startIndex ..< range] == element.token
+        {
             output.removeSubrange(output.startIndex ..< range)
             return output
         }
@@ -99,7 +111,9 @@ public class SwiftyLineProcessor {
     func findTrailingLineElement(_ element: LineRule, in string: String) -> String {
         var output = string
         let token = element.token.trimmingCharacters(in: .whitespaces)
-        if let range = output.index(output.endIndex, offsetBy: -(token.count), limitedBy: output.startIndex), output[range ..< output.endIndex] == token {
+        if let range = output.index(output.endIndex, offsetBy: -(token.count), limitedBy: output.startIndex),
+           output[range ..< output.endIndex] == token
+        {
             output.removeSubrange(range ..< output.endIndex)
             return output
         }

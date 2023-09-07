@@ -51,7 +51,10 @@ class SwiftyMarkdownTests: XCTestCase {
         smd = SwiftyMarkdown(string: allHeaders.map(\.input).joined(separator: "\n"))
         XCTAssertEqual(smd.attributedString().string, allHeaders.map(\.expectedOutput).joined(separator: "\n"))
 
-        let headerString = StringTest(input: "# Header 1\n## Header 2 ##\n### Header 3 ### \n#### Header 4#### \n##### Header 5\n###### Header 6", expectedOutput: "Header 1\nHeader 2\nHeader 3\nHeader 4\nHeader 5\nHeader 6")
+        let headerString = StringTest(
+            input: "# Header 1\n## Header 2 ##\n### Header 3 ### \n#### Header 4#### \n##### Header 5\n###### Header 6",
+            expectedOutput: "Header 1\nHeader 2\nHeader 3\nHeader 4\nHeader 5\nHeader 6"
+        )
         smd = SwiftyMarkdown(string: headerString.input)
         XCTAssertEqual(smd.attributedString().string, headerString.expectedOutput)
 
@@ -73,15 +76,24 @@ class SwiftyMarkdownTests: XCTestCase {
         md = SwiftyMarkdown(string: h2String.input)
         XCTAssertEqual(md.attributedString().string, h2String.expectedOutput)
 
-        let h1StringWithBold = StringTest(input: "Header 1 **With Bold**\n===\nSome following text", expectedOutput: "Header 1 With Bold\nSome following text")
+        let h1StringWithBold = StringTest(
+            input: "Header 1 **With Bold**\n===\nSome following text",
+            expectedOutput: "Header 1 With Bold\nSome following text"
+        )
         md = SwiftyMarkdown(string: h1StringWithBold.input)
         XCTAssertEqual(md.attributedString().string, h1StringWithBold.expectedOutput)
 
-        let h2StringWithItalic = StringTest(input: "Header 2 _With Italic_\n---\nSome following text", expectedOutput: "Header 2 With Italic\nSome following text")
+        let h2StringWithItalic = StringTest(
+            input: "Header 2 _With Italic_\n---\nSome following text",
+            expectedOutput: "Header 2 With Italic\nSome following text"
+        )
         md = SwiftyMarkdown(string: h2StringWithItalic.input)
         XCTAssertEqual(md.attributedString().string, h2StringWithItalic.expectedOutput)
 
-        let h2StringWithCode = StringTest(input: "Header 2 `With Code`\n---\nSome following text", expectedOutput: "Header 2 With Code\nSome following text")
+        let h2StringWithCode = StringTest(
+            input: "Header 2 `With Code`\n---\nSome following text",
+            expectedOutput: "Header 2 With Code\nSome following text"
+        )
         md = SwiftyMarkdown(string: h2StringWithCode.input)
         XCTAssertEqual(md.attributedString().string, h2StringWithCode.expectedOutput)
     }
@@ -425,7 +437,10 @@ class SwiftyMarkdownTests: XCTestCase {
     }
 
     func testThatYAMLMetadataIsRemoved() {
-        let yaml = StringTest(input: "---\nlayout: page\ntitle: \"Trail Wallet FAQ\"\ndate: 2015-04-22 10:59\ncomments: true\nsharing: true\nliking: false\nfooter: true\nsidebar: false\n---\n# Finally some Markdown!\n\nWith A Heading\n---", expectedOutput: "Finally some Markdown!\n\nWith A Heading")
+        let yaml = StringTest(
+            input: "---\nlayout: page\ntitle: \"Trail Wallet FAQ\"\ndate: 2015-04-22 10:59\ncomments: true\nsharing: true\nliking: false\nfooter: true\nsidebar: false\n---\n# Finally some Markdown!\n\nWith A Heading\n---",
+            expectedOutput: "Finally some Markdown!\n\nWith A Heading"
+        )
         let md = SwiftyMarkdown(string: yaml.input)
         XCTAssertEqual(md.attributedString().string, yaml.expectedOutput)
         XCTAssertEqual(md.frontMatterAttributes.count, 8)

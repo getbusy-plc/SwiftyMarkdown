@@ -48,7 +48,11 @@ class SwiftyScanner {
 
     var enableLog = (ProcessInfo.processInfo.environment["SwiftyScannerScanner"] != nil)
 
-    let currentPerfomanceLog = PerformanceLog(with: "SwiftyScannerScannerPerformanceLogging", identifier: "Scanner", log: OSLog.swiftyScannerPerformance)
+    let currentPerfomanceLog = PerformanceLog(
+        with: "SwiftyScannerScannerPerformanceLogging",
+        identifier: "Scanner",
+        log: OSLog.swiftyScannerPerformance
+    )
     let log = PerformanceLog(with: "SwiftyScannerScanner", identifier: "Scanner", log: OSLog.swiftyScanner)
 
     enum Position {
@@ -501,7 +505,13 @@ class SwiftyScanner {
                 tagGroup.count = count
 
                 if enableLog {
-                    os_log("New open tag found with characters %@. Starting new Group with ID %@", log: OSLog.swiftyScanner, type: .info, elements[openRange].map { String($0.character) }.joined(), groupID)
+                    os_log(
+                        "New open tag found with characters %@. Starting new Group with ID %@",
+                        log: OSLog.swiftyScanner,
+                        type: .info,
+                        elements[openRange].map { String($0.character) }.joined(),
+                        groupID
+                    )
                 }
 
                 tagGroups.append(tagGroup)

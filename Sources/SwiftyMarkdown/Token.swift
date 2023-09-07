@@ -46,9 +46,12 @@ public struct Token {
                 let range = inputString.startIndex ..< inputString.index(inputString.startIndex, offsetBy: count)
                 return String(inputString[range])
             }
-        case .openTag, .closeTag, .intermediateTag:
+        case .openTag,
+             .closeTag,
+             .intermediateTag:
             return (isProcessed || isMetadata) ? "" : inputString
-        case .escape, .string:
+        case .escape,
+             .string:
             return (isProcessed || isMetadata) ? "" : inputString
         case .replacement:
             return inputString

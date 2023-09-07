@@ -63,7 +63,18 @@ public struct CharacterRule: CustomStringConvertible {
         tags.filter { $0.type == type }.first ?? nil
     }
 
-    public init(primaryTag: CharacterRuleTag, otherTags: [CharacterRuleTag], escapeCharacters: [Character] = ["\\"], styles: [Int: CharacterStyling] = [:], minTags: Int = 1, maxTags: Int = 1, metadataLookup: Bool = false, definesBoundary: Bool = false, shouldCancelRemainingRules: Bool = false, balancedTags: Bool = false) {
+    public init(
+        primaryTag: CharacterRuleTag,
+        otherTags: [CharacterRuleTag],
+        escapeCharacters: [Character] = ["\\"],
+        styles: [Int: CharacterStyling] = [:],
+        minTags: Int = 1,
+        maxTags: Int = 1,
+        metadataLookup: Bool = false,
+        definesBoundary: Bool = false,
+        shouldCancelRemainingRules: Bool = false,
+        balancedTags: Bool = false
+    ) {
         self.primaryTag = primaryTag
         tags = otherTags
         self.escapeCharacters = escapeCharacters

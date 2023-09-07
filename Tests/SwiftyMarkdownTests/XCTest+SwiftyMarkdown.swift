@@ -76,7 +76,15 @@ class SwiftyMarkdownCharacterTests: XCTestCase {
         let linkTokens = tokens.filter { $0.type == .string && (($0.characterStyles as? [CharacterStyle])?.contains(.link) ?? false) }
         let imageTokens = tokens.filter { $0.type == .string && (($0.characterStyles as? [CharacterStyle])?.contains(.image) ?? false) }
 
-        return ChallengeReturn(tokens: tokens, stringTokens: stringTokens, links: linkTokens, images: imageTokens, attributedString: attributedString, foundStyles: existentTokenStyles, expectedStyles: expectedStyles)
+        return ChallengeReturn(
+            tokens: tokens,
+            stringTokens: stringTokens,
+            links: linkTokens,
+            images: imageTokens,
+            attributedString: attributedString,
+            foundStyles: existentTokenStyles,
+            expectedStyles: expectedStyles
+        )
     }
 }
 
