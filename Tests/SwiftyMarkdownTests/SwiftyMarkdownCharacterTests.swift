@@ -518,7 +518,8 @@ class SwiftyMarkdownStylingTests: XCTestCase {
         XCTAssertEqual(results.attributedString.string, challenge.output)
 
         challenge = TokenTest(
-            input: "_An italic string_, **followed by a bold one**, `with some code`, \\*\\*and some\\*\\* \\_escaped\\_ \\`characters\\`, `ending` *with* __more__ variety.",
+            input: "_An italic string_, **followed by a bold one**, `with some code`,"
+                + " \\*\\*and some\\*\\* \\_escaped\\_ \\`characters\\`, `ending` *with* __more__ variety.",
             output: "An italic string, followed by a bold one, with some code, **and some** _escaped_ `characters`, ending with more variety.",
             tokens: [
                 Token(type: .string, inputString: "An italic string", characterStyles: [CharacterStyle.italic]),

@@ -19,8 +19,7 @@ extension SwiftyMarkdown {
         var globalItalic = false
 
         let style: FontProperties
-        // What type are we and is there a font name set?
-        switch line.lineStyle as! MarkdownLineStyle {
+        switch line.lineStyle as? MarkdownLineStyle {
         case .h1:
             style = h1
         case .h2:
@@ -111,8 +110,7 @@ extension SwiftyMarkdown {
     }
 
     func color(for line: SwiftyLine) -> NSColor {
-        // What type are we and is there a font name set?
-        switch line.lineStyle as! MarkdownLineStyle {
+        switch line.lineStyle as? MarkdownLineStyle {
         case .h1,
              .previousH1:
             return h1.color
@@ -139,6 +137,8 @@ extension SwiftyMarkdown {
         case .yaml:
             return body.color
         case .referencedLink:
+            return body.color
+        case nil:
             return body.color
         }
     }

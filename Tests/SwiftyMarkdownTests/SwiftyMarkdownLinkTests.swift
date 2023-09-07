@@ -243,7 +243,8 @@ class SwiftyMarkdownLinkTests: XCTestCase {
 
     func testForAlternativeURLs() {
         let challenge = TokenTest(
-            input: "Email us at [simon@voyagetravelapps.com](mailto:simon@voyagetravelapps.com) Twitter [@VoyageTravelApp](twitter://user?screen_name=VoyageTravelApp)",
+            input: "Email us at [simon@voyagetravelapps.com](mailto:simon@voyagetravelapps.com) Twitter"
+                + " [@VoyageTravelApp](twitter://user?screen_name=VoyageTravelApp)",
             output: "Email us at simon@voyagetravelapps.com Twitter @VoyageTravelApp",
             tokens: [
                 Token(type: .string, inputString: "Email us at ", characterStyles: []),
