@@ -17,7 +17,7 @@ extension OSLog {
     static let swiftyMarkdownPerformance = OSLog(subsystem: subsystem, category: "Swifty Markdown Performance")
 }
 
-public enum CharacterStyle : CharacterStyling {
+public enum CharacterStyle: CharacterStyling {
     case none
     case bold
     case italic
@@ -36,7 +36,7 @@ public enum CharacterStyle : CharacterStyling {
     }
 }
 
-enum MarkdownLineStyle : LineStyling {
+enum MarkdownLineStyle: LineStyling {
     var shouldTokeniseLine: Bool {
         switch self {
         case .codeblock:
@@ -44,8 +44,8 @@ enum MarkdownLineStyle : LineStyling {
         default:
             return true
         }
-
     }
+
     case yaml
     case h1
     case h2
@@ -68,13 +68,13 @@ enum MarkdownLineStyle : LineStyling {
             return MarkdownLineStyle.h1
         case .previousH2:
             return MarkdownLineStyle.h2
-        default :
+        default:
             return nil
         }
     }
 }
 
-@objc public enum FontStyle : Int {
+@objc public enum FontStyle: Int {
     case normal
     case bold
     case italic
@@ -83,117 +83,143 @@ enum MarkdownLineStyle : LineStyling {
 
 #if os(macOS)
 @objc public protocol FontProperties {
-    var fontName : String? { get set }
-    var color : NSColor { get set }
-    var fontSize : CGFloat { get set }
-    var fontStyle : FontStyle { get set }
+    var fontName: String? { get set }
+    var color: NSColor { get set }
+    var fontSize: CGFloat { get set }
+    var fontStyle: FontStyle { get set }
 }
 #else
 @objc public protocol FontProperties {
-    var fontName : String? { get set }
-    var color : UIColor { get set }
-    var fontSize : CGFloat { get set }
-    var fontStyle : FontStyle { get set }
+    var fontName: String? { get set }
+    var color: UIColor { get set }
+    var fontSize: CGFloat { get set }
+    var fontStyle: FontStyle { get set }
 }
 #endif
 
-
 @objc public protocol LineProperties {
-    var alignment : NSTextAlignment { get set }
+    var alignment: NSTextAlignment { get set }
     var lineSpacing: CGFloat { get set }
     var paragraphSpacing: CGFloat { get set }
 }
-
 
 /**
  A class defining the styles that can be applied to the parsed Markdown. The `fontName` property is optional, and if it's not set then the `fontName` property of the Body style will be applied.
 
  If that is not set, then the system default will be used.
  */
-@objc open class BasicStyles : NSObject, FontProperties {
-    public var fontName : String?
-#if os(macOS)
+@objc open class BasicStyles: NSObject, FontProperties {
+    public var fontName: String?
+    #if os(macOS)
     public var color = NSColor.black
-#else
+    #else
     public var color = UIColor.black
-#endif
-    public var fontSize : CGFloat = 0.0
-    public var fontStyle : FontStyle = .normal
+    #endif
+    public var fontSize: CGFloat = 0.0
+    public var fontStyle: FontStyle = .normal
 }
 
-@objc open class LineStyles : NSObject, FontProperties, LineProperties {
-    public var fontName : String?
-#if os(macOS)
+@objc open class LineStyles: NSObject, FontProperties, LineProperties {
+    public var fontName: String?
+    #if os(macOS)
     public var color = NSColor.black
-#else
+    #else
     public var color = UIColor.black
-#endif
-    public var fontSize : CGFloat = 0.0
-    public var fontStyle : FontStyle = .normal
+    #endif
+    public var fontSize: CGFloat = 0.0
+    public var fontStyle: FontStyle = .normal
     public var alignment: NSTextAlignment = .left
-    public var lineSpacing : CGFloat = 0.0
-    public var paragraphSpacing : CGFloat = 0.0
+    public var lineSpacing: CGFloat = 0.0
+    public var paragraphSpacing: CGFloat = 0.0
 }
 
-@objc open class LinkStyles : BasicStyles {
+@objc open class LinkStyles: BasicStyles {
     public var underlineStyle: NSUnderlineStyle = .single
-#if os(macOS)
+    #if os(macOS)
     public lazy var underlineColor = self.color
-#else
+    #else
     public lazy var underlineColor = self.color
-#endif
+    #endif
 }
 
-/// A class that takes a [Markdown](https://daringfireball.net/projects/markdown/) string or file and returns an NSAttributedString with the applied styles. Supports Dynamic Type.
+/// A class that takes a [Markdown](https://daringfireball.net/projects/markdown/) string or file and returns an NSAttributedString with the applied
+/// styles. Supports Dynamic Type.
 @objc open class SwiftyMarkdown: NSObject {
-
-    static public var frontMatterRules = [
-        FrontMatterRule(openTag: "---", closeTag: "---", keyValueSeparator: ":")
+    public static var frontMatterRules = [
+        FrontMatterRule(openTag: "---", closeTag: "---", keyValueSeparator: ":"),
     ]
 
-    static public var lineRules = [
+    public static var lineRules = [
         LineRule(token: "=", type: MarkdownLineStyle.previousH1, removeFrom: .entireLine, changeAppliesTo: .previous),
-        LineRule(token: "-", type: MarkdownLineStyle.previousH2, removeFrom: .entireLine, changeAppliesTo: .previous)
+        LineRule(token: "-", type: MarkdownLineStyle.previousH2, removeFrom: .entireLine, changeAppliesTo: .previous),
     ] + LineRule.listRules() + [
         LineRule(token: "    ", type: MarkdownLineStyle.codeblock, removeFrom: .leading, shouldTrim: false),
         LineRule(token: "\t", type: MarkdownLineStyle.codeblock, removeFrom: .leading, shouldTrim: false),
-        LineRule(token: ">",type : MarkdownLineStyle.blockquote, removeFrom: .leading),
-        LineRule(token: "###### ",type : MarkdownLineStyle.h6, removeFrom: .both),
-        LineRule(token: "##### ",type : MarkdownLineStyle.h5, removeFrom: .both),
-        LineRule(token: "#### ",type : MarkdownLineStyle.h4, removeFrom: .both),
-        LineRule(token: "### ",type : MarkdownLineStyle.h3, removeFrom: .both),
-        LineRule(token: "## ",type : MarkdownLineStyle.h2, removeFrom: .both),
-        LineRule(token: "# ",type : MarkdownLineStyle.h1, removeFrom: .both)
+        LineRule(token: ">", type: MarkdownLineStyle.blockquote, removeFrom: .leading),
+        LineRule(token: "###### ", type: MarkdownLineStyle.h6, removeFrom: .both),
+        LineRule(token: "##### ", type: MarkdownLineStyle.h5, removeFrom: .both),
+        LineRule(token: "#### ", type: MarkdownLineStyle.h4, removeFrom: .both),
+        LineRule(token: "### ", type: MarkdownLineStyle.h3, removeFrom: .both),
+        LineRule(token: "## ", type: MarkdownLineStyle.h2, removeFrom: .both),
+        LineRule(token: "# ", type: MarkdownLineStyle.h1, removeFrom: .both),
     ]
 
-    static public var characterRules = [
+    public static var characterRules = [
         CharacterRule(primaryTag: CharacterRuleTag(tag: "![", type: .open), otherTags: [
             CharacterRuleTag(tag: "]", type: .close),
             CharacterRuleTag(tag: "[", type: .metadataOpen),
-            CharacterRuleTag(tag: "]", type: .metadataClose)
-        ], styles: [1 : CharacterStyle.image], metadataLookup: true, definesBoundary: true),
+            CharacterRuleTag(tag: "]", type: .metadataClose),
+        ], styles: [1: CharacterStyle.image], metadataLookup: true, definesBoundary: true),
         CharacterRule(primaryTag: CharacterRuleTag(tag: "![", type: .open), otherTags: [
             CharacterRuleTag(tag: "]", type: .close),
             CharacterRuleTag(tag: "(", type: .metadataOpen),
-            CharacterRuleTag(tag: ")", type: .metadataClose)
-        ], styles: [1 : CharacterStyle.image], metadataLookup: false, definesBoundary: true),
+            CharacterRuleTag(tag: ")", type: .metadataClose),
+        ], styles: [1: CharacterStyle.image], metadataLookup: false, definesBoundary: true),
         CharacterRule(primaryTag: CharacterRuleTag(tag: "[", type: .open), otherTags: [
             CharacterRuleTag(tag: "]", type: .close),
             CharacterRuleTag(tag: "[", type: .metadataOpen),
-            CharacterRuleTag(tag: "]", type: .metadataClose)
-        ], styles: [1 : CharacterStyle.link], metadataLookup: true, definesBoundary: true),
+            CharacterRuleTag(tag: "]", type: .metadataClose),
+        ], styles: [1: CharacterStyle.link], metadataLookup: true, definesBoundary: true),
         CharacterRule(primaryTag: CharacterRuleTag(tag: "[", type: .open), otherTags: [
             CharacterRuleTag(tag: "]", type: .close),
             CharacterRuleTag(tag: "(", type: .metadataOpen),
-            CharacterRuleTag(tag: ")", type: .metadataClose)
-        ], styles: [1 : CharacterStyle.link], metadataLookup: false, definesBoundary: true),
-        CharacterRule(primaryTag: CharacterRuleTag(tag: "`", type: .repeating), otherTags: [], styles: [1 : CharacterStyle.code], shouldCancelRemainingRules: true, balancedTags: true),
-        CharacterRule(primaryTag:CharacterRuleTag(tag: "~", type: .repeating), otherTags : [], styles: [2 : CharacterStyle.strikethrough], minTags:2 , maxTags:2),
-        CharacterRule(primaryTag: CharacterRuleTag(tag: "*", type: .repeating), otherTags: [], styles: [1 : CharacterStyle.italic, 2 : CharacterStyle.bold], minTags:1 , maxTags:2),
-        CharacterRule(primaryTag: CharacterRuleTag(tag: "_", type: .repeating), otherTags: [], styles: [1 : CharacterStyle.italic, 2 : CharacterStyle.bold], minTags:1 , maxTags:2)
+            CharacterRuleTag(tag: ")", type: .metadataClose),
+        ], styles: [1: CharacterStyle.link], metadataLookup: false, definesBoundary: true),
+        CharacterRule(
+            primaryTag: CharacterRuleTag(tag: "`", type: .repeating),
+            otherTags: [],
+            styles: [1: CharacterStyle.code],
+            shouldCancelRemainingRules: true,
+            balancedTags: true
+        ),
+        CharacterRule(
+            primaryTag: CharacterRuleTag(tag: "~", type: .repeating),
+            otherTags: [],
+            styles: [2: CharacterStyle.strikethrough],
+            minTags: 2,
+            maxTags: 2
+        ),
+        CharacterRule(
+            primaryTag: CharacterRuleTag(tag: "*", type: .repeating),
+            otherTags: [],
+            styles: [1: CharacterStyle.italic, 2: CharacterStyle.bold],
+            minTags: 1,
+            maxTags: 2
+        ),
+        CharacterRule(
+            primaryTag: CharacterRuleTag(tag: "_", type: .repeating),
+            otherTags: [],
+            styles: [1: CharacterStyle.italic, 2: CharacterStyle.bold],
+            minTags: 1,
+            maxTags: 2
+        ),
     ]
 
-    let lineProcessor = SwiftyLineProcessor(rules: SwiftyMarkdown.lineRules, defaultRule: MarkdownLineStyle.body, frontMatterRules: SwiftyMarkdown.frontMatterRules)
+    let lineProcessor = SwiftyLineProcessor(
+        rules: SwiftyMarkdown.lineRules,
+        defaultRule: MarkdownLineStyle.body,
+        frontMatterRules: SwiftyMarkdown.frontMatterRules
+    )
     let tokeniser = SwiftyTokeniser(with: SwiftyMarkdown.characterRules)
 
     /// The styles to apply to any H1 headers found in the Markdown
@@ -234,24 +260,22 @@ enum MarkdownLineStyle : LineStyling {
 
     open var strikethrough = BasicStyles()
 
-    public var bullet : String = "•"
-    public var bulletAlt : String = "◦"
+    public var bullet: String = "•"
+    public var bulletAlt: String = "◦"
 
-    public var underlineLinks : Bool = false
+    public var underlineLinks: Bool = false
 
-    public var frontMatterAttributes : [String : String] {
-        get {
-            return self.lineProcessor.frontMatterAttributes
-        }
+    public var frontMatterAttributes: [String: String] {
+        lineProcessor.frontMatterAttributes
     }
 
-    var currentType : MarkdownLineStyle = .body
+    var currentType: MarkdownLineStyle = .body
 
-    var string : String
+    var string: String
 
     var orderedListCounts = [Int]()
 
-    var previouslyFoundTokens : [Token] = []
+    var previouslyFoundTokens: [Token] = []
 
     var applyAttachments = true
 
@@ -263,10 +287,10 @@ enum MarkdownLineStyle : LineStyling {
 
      - returns: An initialized SwiftyMarkdown object
      */
-    public init(string : String ) {
+    public init(string: String) {
         self.string = string
         super.init()
-        self.setup()
+        setup()
     }
 
     /**
@@ -276,27 +300,26 @@ enum MarkdownLineStyle : LineStyling {
 
      - returns: An initialized SwiftyMarkdown object, or nil if the string couldn't be read
      */
-    public init?(url : URL ) {
-
+    public init?(url: URL) {
         do {
-            self.string = try NSString(contentsOf: url, encoding: String.Encoding.utf8.rawValue) as String
+            string = try NSString(contentsOf: url, encoding: String.Encoding.utf8.rawValue) as String
 
         } catch {
-            self.string = ""
+            string = ""
             return nil
         }
         super.init()
-        self.setup()
+        setup()
     }
 
     func setup() {
-#if os(macOS)
-        self.setFontColorForAllStyles(with: .labelColor)
-#elseif !os(watchOS)
+        #if os(macOS)
+        setFontColorForAllStyles(with: .labelColor)
+        #elseif !os(watchOS)
         if #available(iOS 13.0, tvOS 13.0, *) {
             self.setFontColorForAllStyles(with: .label)
         }
-#endif
+        #endif
 
         orderedListCounts = Array(repeating: 0, count: LineRule.listIndentationLevels + 1)
     }
@@ -322,7 +345,7 @@ enum MarkdownLineStyle : LineStyling {
         strikethrough.fontSize = size
     }
 
-#if os(macOS)
+    #if os(macOS)
     open func setFontColorForAllStyles(with color: NSColor) {
         h1.color = color
         h2.color = color
@@ -338,7 +361,7 @@ enum MarkdownLineStyle : LineStyling {
         blockquotes.color = color
         strikethrough.color = color
     }
-#else
+    #else
     open func setFontColorForAllStyles(with color: UIColor) {
         h1.color = color
         h2.color = color
@@ -354,7 +377,7 @@ enum MarkdownLineStyle : LineStyling {
         blockquotes.color = color
         strikethrough.color = color
     }
-#endif
+    #endif
 
     open func setFontNameForAllStyles(with name: String) {
         h1.fontName = name
@@ -372,69 +395,65 @@ enum MarkdownLineStyle : LineStyling {
         strikethrough.fontName = name
     }
 
-
     /**
      Generates an NSAttributedString from the string or URL passed at initialisation. Custom fonts or styles are applied to the appropriate elements when this method is called.
 
      - returns: An NSAttributedString with the styles applied
      */
-    open func attributedString(from markdownString : String? = nil) -> NSAttributedString {
-
-        self.previouslyFoundTokens.removeAll()
-        self.perfomanceLog.start()
+    open func attributedString(from markdownString: String? = nil) -> NSAttributedString {
+        previouslyFoundTokens.removeAll()
+        perfomanceLog.start()
 
         if let existentMarkdownString = markdownString {
-            self.string = existentMarkdownString
+            string = existentMarkdownString
         }
         let attributedString = NSMutableAttributedString(string: "")
-        self.lineProcessor.processEmptyStrings = MarkdownLineStyle.body
-        let foundAttributes : [SwiftyLine] = lineProcessor.process(self.string)
+        lineProcessor.processEmptyStrings = MarkdownLineStyle.body
+        let foundAttributes: [SwiftyLine] = lineProcessor.process(string)
 
-        let references : [SwiftyLine] = foundAttributes.filter({ $0.line.starts(with: "[") && $0.line.contains("]:") })
-        let referencesRemoved : [SwiftyLine] = foundAttributes.filter({ !($0.line.starts(with: "[") && $0.line.contains("]:") ) })
-        var keyValuePairs : [String : String] = [:]
+        let references: [SwiftyLine] = foundAttributes.filter { $0.line.starts(with: "[") && $0.line.contains("]:") }
+        let referencesRemoved: [SwiftyLine] = foundAttributes.filter { !($0.line.starts(with: "[") && $0.line.contains("]:")) }
+        var keyValuePairs: [String: String] = [:]
         for line in references {
             let strings = line.line.components(separatedBy: "]:")
             guard strings.count >= 2 else {
                 continue
             }
-            var key : String = strings[0]
+            var key: String = strings[0]
             if !key.isEmpty {
                 let newstart = key.index(key.startIndex, offsetBy: 1)
-                let range : Range<String.Index> = newstart..<key.endIndex
+                let range: Range<String.Index> = newstart ..< key.endIndex
                 key = String(key[range]).trimmingCharacters(in: .whitespacesAndNewlines)
             }
             keyValuePairs[key] = strings[1].trimmingCharacters(in: .whitespacesAndNewlines)
         }
 
-        self.perfomanceLog.tag(with: "(line processing complete)")
+        perfomanceLog.tag(with: "(line processing complete)")
 
-        self.tokeniser.metadataLookup = keyValuePairs
+        tokeniser.metadataLookup = keyValuePairs
 
         for (idx, line) in referencesRemoved.enumerated() {
             if idx > 0 {
                 attributedString.append(NSAttributedString(string: "\n"))
             }
-            let finalTokens = self.tokeniser.process(line.line)
-            self.previouslyFoundTokens.append(contentsOf: finalTokens)
-            self.perfomanceLog.tag(with: "(tokenising complete for line \(idx)")
+            let finalTokens = tokeniser.process(line.line)
+            previouslyFoundTokens.append(contentsOf: finalTokens)
+            perfomanceLog.tag(with: "(tokenising complete for line \(idx)")
 
             attributedString.append(attributedStringFor(tokens: finalTokens, in: line))
-
         }
 
-        self.perfomanceLog.end()
+        perfomanceLog.end()
 
         return attributedString
     }
-
 }
 
 extension SwiftyMarkdown {
-    func attributedStringFor( tokens : [Token], in line : SwiftyLine ) -> NSAttributedString {
+    func attributedStringFor(tokens: [Token], in line: SwiftyLine) -> NSAttributedString {
         var finalTokens = tokens
         let finalAttributedString = NSMutableAttributedString()
-        var attributes : [NSAttributedString.Key : AnyObject] = [:]
+        var attributes: [NSAttributedString.Key: AnyObject] = [:]
 
         guard let markdownLineStyle = line.lineStyle as? MarkdownLineStyle else {
             preconditionFailure("The passed line style is not a valid Markdown Line Style")
@@ -445,7 +464,7 @@ extension SwiftyMarkdown {
         case let .orderedList(level):
             orderedListCounts[level] += 1
             if level < LineRule.listIndentationLevels {
-                for index in (level + 1)...LineRule.listIndentationLevels {
+                for index in (level + 1) ... LineRule.listIndentationLevels {
                     orderedListCounts[index] = 0
                 }
             }
@@ -461,32 +480,33 @@ extension SwiftyMarkdown {
             }
         }
 
-        let lineProperties : LineProperties
+        let lineProperties: LineProperties
         switch markdownLineStyle {
         case .h1:
-            lineProperties = self.h1
+            lineProperties = h1
         case .h2:
-            lineProperties = self.h2
+            lineProperties = h2
         case .h3:
-            lineProperties = self.h3
+            lineProperties = h3
         case .h4:
-            lineProperties = self.h4
+            lineProperties = h4
         case .h5:
-            lineProperties = self.h5
+            lineProperties = h5
         case .h6:
-            lineProperties = self.h6
+            lineProperties = h6
         case .codeblock:
             lineProperties = body
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.firstLineHeadIndent = 20.0
             attributes[.paragraphStyle] = paragraphStyle
         case .blockquote:
-            lineProperties = self.blockquotes
+            lineProperties = blockquotes
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.firstLineHeadIndent = 20.0
             paragraphStyle.headIndent = 20.0
             attributes[.paragraphStyle] = paragraphStyle
-        case let .orderedList(level), let .unorderedList(level):
+        case let .orderedList(level),
+             let .unorderedList(level):
             var indent = ""
             if level > 0 {
                 indent = String(repeating: "   ", count: level)
@@ -513,65 +533,64 @@ extension SwiftyMarkdown {
         paragraphStyle.paragraphSpacing = lineProperties.paragraphSpacing
         attributes[.paragraphStyle] = paragraphStyle
 
-
         for token in finalTokens {
-            attributes[.font] = self.font(for: line)
+            attributes[.font] = font(for: line)
             attributes[.link] = nil
             attributes[.strikethroughStyle] = nil
-            attributes[.foregroundColor] = self.color(for: line)
+            attributes[.foregroundColor] = color(for: line)
             attributes[.underlineStyle] = nil
             guard let styles = token.characterStyles as? [CharacterStyle] else {
                 continue
             }
             if styles.contains(.italic) {
-                attributes[.font] = self.font(for: line, characterOverride: .italic)
-                attributes[.foregroundColor] = self.italic.color
+                attributes[.font] = font(for: line, characterOverride: .italic)
+                attributes[.foregroundColor] = italic.color
             }
             if styles.contains(.bold) {
-                attributes[.font] = self.font(for: line, characterOverride: .bold)
-                attributes[.foregroundColor] = self.bold.color
+                attributes[.font] = font(for: line, characterOverride: .bold)
+                attributes[.foregroundColor] = bold.color
             }
 
             if let linkIdx = styles.firstIndex(of: .link), linkIdx < token.metadataStrings.count {
-                attributes[.foregroundColor] = self.link.color
-                attributes[.font] = self.font(for: line, characterOverride: .link)
+                attributes[.foregroundColor] = link.color
+                attributes[.font] = font(for: line, characterOverride: .link)
                 attributes[.link] = token.metadataStrings[linkIdx] as AnyObject
 
                 if underlineLinks {
-                    attributes[.underlineStyle] = self.link.underlineStyle.rawValue as AnyObject
-                    attributes[.underlineColor] = self.link.underlineColor
+                    attributes[.underlineStyle] = link.underlineStyle.rawValue as AnyObject
+                    attributes[.underlineColor] = link.underlineColor
                 }
             }
 
             if styles.contains(.strikethrough) {
-                attributes[.font] = self.font(for: line, characterOverride: .strikethrough)
+                attributes[.font] = font(for: line, characterOverride: .strikethrough)
                 attributes[.strikethroughStyle] = NSUnderlineStyle.single.rawValue as AnyObject
-                attributes[.foregroundColor] = self.strikethrough.color
+                attributes[.foregroundColor] = strikethrough.color
             }
 
-#if !os(watchOS)
+            #if !os(watchOS)
             if let imgIdx = styles.firstIndex(of: .image), imgIdx < token.metadataStrings.count {
-                if !self.applyAttachments {
+                if !applyAttachments {
                     continue
                 }
-#if !os(macOS)
+                #if !os(macOS)
                 let image1Attachment = NSTextAttachment()
                 image1Attachment.image = UIImage(named: token.metadataStrings[imgIdx])
                 let str = NSAttributedString(attachment: image1Attachment)
                 finalAttributedString.append(str)
-#elseif !os(watchOS)
+                #elseif !os(watchOS)
                 let image1Attachment = NSTextAttachment()
                 image1Attachment.image = NSImage(named: token.metadataStrings[imgIdx])
                 let str = NSAttributedString(attachment: image1Attachment)
                 finalAttributedString.append(str)
-#endif
+                #endif
                 continue
             }
-#endif
+            #endif
 
             if styles.contains(.code) {
-                attributes[.foregroundColor] = self.code.color
-                attributes[.font] = self.font(for: line, characterOverride: .code)
+                attributes[.foregroundColor] = code.color
+                attributes[.font] = font(for: line, characterOverride: .code)
             } else {
                 // Switch back to previous font
             }

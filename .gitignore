@@ -83,5 +83,7 @@ Tuist/Dependencies/Cocoapods
 Tuist/Dependencies/SwiftPackageManager
 
 # BuildTools
-
 BuildTools/Tools
+
+# Reports
+reports
