@@ -5,19 +5,19 @@ public extension LineRule {
 
     static func listRules() -> [LineRule] {
         var rules = [LineRule]()
-        for level in (1...listIndentationLevels).reversed() {
+        for level in (1 ... listIndentationLevels).reversed() {
             rules.append(unorderedList(bullet: "-", indent: "\t", level: level))
             rules.append(unorderedList(bullet: "-", indent: "  ", level: level))
         }
-        for level in (1...listIndentationLevels).reversed() {
+        for level in (1 ... listIndentationLevels).reversed() {
             rules.append(unorderedList(bullet: "*", indent: "\t", level: level))
             rules.append(unorderedList(bullet: "*", indent: "  ", level: level))
         }
-        for level in (1...listIndentationLevels).reversed() {
+        for level in (1 ... listIndentationLevels).reversed() {
             rules.append(unorderedList(bullet: "+", indent: "\t", level: level))
             rules.append(unorderedList(bullet: "+", indent: "  ", level: level))
         }
-        for level in (1...listIndentationLevels).reversed() {
+        for level in (1 ... listIndentationLevels).reversed() {
             rules.append(orderedList(indent: "\t", level: level))
             rules.append(orderedList(indent: "  ", level: level))
         }
@@ -32,7 +32,7 @@ public extension LineRule {
     static func orderedList() -> LineRule {
         LineRule(
             token: "1. ",
-            type : MarkdownLineStyle.orderedList(level: 0),
+            type: MarkdownLineStyle.orderedList(level: 0),
             removeFrom: .leading
         )
     }
@@ -44,7 +44,7 @@ public extension LineRule {
         let indentToken = String(repeating: indent, count: level)
         return LineRule(
             token: "\(indentToken)1. ",
-            type : MarkdownLineStyle.orderedList(level: level),
+            type: MarkdownLineStyle.orderedList(level: level),
             removeFrom: .leading,
             shouldTrim: false
         )
@@ -53,7 +53,7 @@ public extension LineRule {
     static func unorderedList(bullet: String) -> LineRule {
         LineRule(
             token: "\(bullet) ",
-            type : MarkdownLineStyle.unorderedList(level: 0),
+            type: MarkdownLineStyle.unorderedList(level: 0),
             removeFrom: .leading
         )
     }
@@ -66,7 +66,7 @@ public extension LineRule {
         let indentToken = String(repeating: indent, count: level)
         return LineRule(
             token: "\(indentToken)\(bullet) ",
-            type : MarkdownLineStyle.unorderedList(level: level),
+            type: MarkdownLineStyle.unorderedList(level: level),
             removeFrom: .leading,
             shouldTrim: false
         )
